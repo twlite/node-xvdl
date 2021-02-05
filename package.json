@@ -1,0 +1,34 @@
+{
+  "name": "xvdl",
+  "version": "1.0.0",
+  "description": "Video downloader for xvideos.com written in pure JavaScript.",
+  "main": "index.js",
+  "types": "./typings/index.d.ts",
+  "scripts": {
+    "test": "cd test && node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevSnowflake/node-xvdl.git"
+  },
+  "keywords": [
+    "xvdl",
+    "video",
+    "downloader",
+    "xvideos",
+    "api",
+    "search",
+    "info"
+  ],
+  "author": "Snowflake107",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/DevSnowflake/node-xvdl/issues"
+  },
+  "homepage": "https://github.com/DevSnowflake/node-xvdl#readme",
+  "dependencies": {
+    "jsdom": "^16.4.0",
+    "m3u8stream": "^0.8.3",
+    "miniget": "^4.2.0"
+  }
+}
