@@ -57,6 +57,7 @@ class XVDL {
         const vidMetadata = document.querySelector('.video-metadata');
 
         const info = {
+            url: url,
             title: document.querySelector("meta[property='og:title']").getAttribute("content"),
             length: parseInt(document.querySelector("meta[property='og:duration']").getAttribute("content")) || 0,
             views: parseInt(document.querySelector("#nb-views-number").textContent.split(",").join("")) || 0,

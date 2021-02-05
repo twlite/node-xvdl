@@ -42,6 +42,7 @@ declare module "xvdl" {
     }
 
     export interface VideoInfo {
+        url: string;
         title: string;
         length: number;
         views: number;
