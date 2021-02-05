@@ -83,7 +83,7 @@ declare module "xvdl" {
     export interface ConstantsInterface {
         BASE_URL: string;
         SEARCH_HEAD: string;
-    };
+    }
 
     export const Constants: ConstantsInterface;
     export const version: string;

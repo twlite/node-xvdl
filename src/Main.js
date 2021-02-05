@@ -9,6 +9,10 @@ class XVDL {
         throw new Error("Cannot instantiate static class");
     }
 
+    /**
+     * Browse pages and get data. Defaults to homepage.
+     * @param {string} [path] Browsing path
+     */
     static async browse(path = undefined) {
         const html = await Util.getHTML(`${Constants.BASE_URL}${path && typeof path === "string" ? path : ""}`);
         const { document } = Util.getDOM(html).window;
@@ -40,6 +44,10 @@ class XVDL {
         return data;
     }
 
+    /**
+     * Returns video info
+     * @param {string} url Video url
+     */
     static async getInfo(url) {
         if (!url || typeof url !== "string") throw new Error("URL must be a string.");
         const html = await Util.getHTML(url);
@@ -74,6 +82,11 @@ class XVDL {
         return info;
     }
 
+    /**
+     * Downloads a video
+     * @param {string} url Video url
+     * @param {object} options Download options
+     */
     static async download(url, options = { type: "hq" }) {
         if (!url || typeof url !== "string") throw new Error("URL must be a string.");
         const info = await XVDL.getInfo(url);
@@ -97,6 +110,11 @@ class XVDL {
         return downloader(link, options);
     }
 
+    /**
+     * Search something
+     * @param {string} query Search query
+     * @param {number} [page] Page number to search
+     */
     static async search(query, page = undefined) {
         if (!query || typeof query !== "string") throw new Error("Invalid search query!");
 
