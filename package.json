@@ -1,6 +1,6 @@
 {
   "name": "xvdl",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Video downloader for xvideos.com written in pure JavaScript.",
   "main": "index.js",
   "types": "./typings/index.d.ts",
