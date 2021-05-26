@@ -42,9 +42,7 @@ const { XVDL } = require("xvdl");
 const fs = require("fs");
 const url = "VIDEO_URL_HERE";
 
-XVDL.download(url, { type: "hq" })
-    .then(stream => stream.pipe(fs.createWriteStream("./video.mp4")))
-    .catch(console.error);
+XVDL.download(url, { type: "hq" }).pipe(fs.createWriteStream("./video.mp4"))
 ```
 
 # API
