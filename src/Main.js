@@ -2,6 +2,15 @@ const Util = require("./Util");
 const Constants = require("./Constants");
 const miniget = require("miniget");
 const m3u8 = require("m3u8stream");
+const { PassThrough } = require("stream");
+
+const createStream = () => {
+    const stream = new PassThrough({
+        highWaterMark: 1024 * 512,
+    });
+    stream.destroy = () => { stream._isDestroyed = true; };
+    return stream;
+}
 
 class XVDL {
 
@@ -16,10 +25,10 @@ class XVDL {
     static async browse(path = undefined) {
         const html = await Util.getHTML(`${Constants.BASE_URL}${path && typeof path === "string" ? path : ""}`);
         const { document } = Util.getDOM(html).window;
-
-        const videos = document.querySelectorAll('div[class="thumb-block "]');
+        const videos = document.querySelectorAll('div[class="thumb-block  "]');
         const data = {
-            videos: []
+            videos: [],
+            lastPage: parseInt(document.querySelector(".last-page").textContent) || 1
         };
 
         videos.forEach(video => {
@@ -27,9 +36,9 @@ class XVDL {
 
             data.videos.push({
                 id: video.getAttribute("data-id"),
-                title: paragraph.textContent,
+                title: paragraph.querySelector("a").title,
                 url: `${Constants.BASE_URL}${paragraph.querySelector('a').href}`,
-                duration: video.querySelector('span[class="duration"]').textContent,
+                duration: paragraph.querySelector('span[class="duration"]').textContent,
                 channel: {
                     url: `${Constants.BASE_URL}${video.querySelector('p[class="metadata"]').querySelector('a').href}`,
                     name: video.querySelector('span[class="name"]').textContent
@@ -88,27 +97,34 @@ class XVDL {
      * @param {string} url Video url
      * @param {object} options Download options
      */
-    static async download(url, options = { type: "hq" }) {
+    static download(url, options = { type: "hq" }) {
         if (!url || typeof url !== "string") throw new Error("URL must be a string.");
-        const info = await XVDL.getInfo(url);
+        const stream = createStream();
 
-        let link = "";
-        switch(options && options.type) {
-            case "lq":
-                link = info.streams.lq;
-                break;
-            case "hq":
-                link = info.streams.hq;
-                break;
-            case "hls":
-                link = info.streams.hls;
-                break;
-            default:
-                throw new Error(`Unknown type "${options.type}"`);
-        }
+        setImmediate(() => {
+            XVDL.getInfo(url)
+                .then(info => {
+                    let link = "";
+                    switch (options && options.type) {
+                        case "lq":
+                            link = info.streams.lq;
+                            break;
+                        case "hq":
+                            link = info.streams.hq;
+                            break;
+                        case "hls":
+                            link = info.streams.hls;
+                            break;
+                        default:
+                            throw new Error(`Unknown type "${options.type}"`);
+                    }
 
-        const downloader = options.type === "hls" ? m3u8 : miniget;
-        return downloader(link, options);
+                    const downloader = options.type === "hls" ? m3u8 : miniget;
+                    downloader(link, options).pipe(stream);
+                });
+        });
+
+        return stream;
     }
 
     /**

@@ -33,6 +33,7 @@ declare module "xvdl" {
 
     export interface BrowseResult {
         videos: SearchData[];
+        lastPage: number;
     }
 
     export type SearchResult = BrowseResult;
