@@ -1,4 +1,4 @@
-import m3u8 from "m3u8stream";
+import { Readable } from "stream";
 import miniget from "miniget";
 
 declare module "xvdl" {
@@ -75,10 +75,7 @@ declare module "xvdl" {
     export class XVDL {
         public static browse(path?: string): Promise<BrowseResult>;
         public static getInfo(url: string): Promise<VideoInfo>;
-        public static download(url: string, options: DownloadOptions & { type: "lq" }): Promise<miniget.Stream>;
-        public static download(url: string, options: DownloadOptions & { type: "hq" }): Promise<miniget.Stream>;
-        public static download(url: string, options: DownloadOptions & { type: "hls" }): Promise<m3u8.Stream>;
-        public static download(url: string, options?: DownloadOptions): Promise<miniget.Stream|m3u8.Stream>;
+        public static download(url: string, options?: DownloadOptions): Readable;
         public static search(query: string, page?: number): Promise<SearchResult>;
     }
 
